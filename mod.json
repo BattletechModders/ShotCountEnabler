@@ -1,0 +1,12 @@
+{
+    "Name": "ShotCountEnabler",
+    "Enabled": true,
+
+    "Version": "0.1",
+    "Description": "Lets you configure Balistic weapon with multible shots.",
+    "Author": "Morphyum",
+    "Website": "https://github.com/Morphyum/ShotCountEnabler",
+    "Contact": "",
+	
+	"DLL": "ShotCountEnabler.dll",
+}

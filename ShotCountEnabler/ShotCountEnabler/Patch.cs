@@ -1,7 +1,6 @@
 ﻿using BattleTech;
 using Harmony;
 using System;
-using System.Reflection;
 
 namespace ShotCountEnabler {
 
