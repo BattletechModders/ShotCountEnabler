@@ -7,6 +7,6 @@
     "Author": "Morphyum",
     "Website": "https://github.com/Morphyum/ShotCountEnabler",
     "Contact": "",
-	
+	"Settings": {},
 	"DLL": "ShotCountEnabler.dll",
 }
