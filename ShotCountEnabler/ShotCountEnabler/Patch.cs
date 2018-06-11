@@ -1,12 +1,13 @@
 ﻿using BattleTech;
 using Harmony;
 using System;
+using System.Collections.Generic;
 
 namespace ShotCountEnabler {
 
     [HarmonyPatch(typeof(BallisticEffect), "Update")]
     public static class BallisticEffect_Update {
-        static int shotcount = 1;
+        static Dictionary<int, int> shotcountHolder = new Dictionary<int, int>();
 
         static void Prefix(ref BallisticEffect __instance) {
             try {
@@ -15,15 +16,25 @@ namespace ShotCountEnabler {
 
                 if (__instance.currentState == WeaponEffect.WeaponEffectState.WaitingForImpact && allbullets) {
 
-                    ReflectionHelper.SetPrivateField(__instance, "hitIndex", shotcount - 1);
-                    if (shotcount == __instance.hitInfo.numberOfShots) {
-                        shotcount = 1;                  
+                    int effectId = __instance.GetInstanceID();
+
+                    if(!shotcountHolder.ContainsKey(effectId))
+                    {
+                        shotcountHolder[effectId] = 1;
+                        //Logger.LogLine("effectId: " + effectId + " added");
+                    }
+
+                    ReflectionHelper.SetPrivateField(__instance, "hitIndex", shotcountHolder[effectId] - 1);
+                    if (shotcountHolder[effectId] >= __instance.hitInfo.numberOfShots) {
+                        shotcountHolder[effectId] = 1;             
                         ReflectionHelper.InvokePrivateMethode(__instance, "OnImpact", new object[] { __instance.weapon.DamagePerShot });
+                        //Logger.LogLine("effectId: " + effectId + " shotcount reset"); 
                     }
                     else {
-                        shotcount++;
+                        shotcountHolder[effectId]++;
                         ReflectionHelper.InvokePrivateMethode(__instance, "OnImpact", new object[] { __instance.weapon.DamagePerShot });
                         __instance.Fire(__instance.hitInfo, 0, 0);
+                       // Logger.LogLine("effectId: " + effectId + " shotcount incremented to:" + shotcountHolder[effectId]);
                     }
                 }
             }
